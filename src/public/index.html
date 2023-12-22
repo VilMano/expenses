@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <title>Expenses</title>
+</head>
+
+<body>
+    <header></header>
+    <main>
+        <div id="outer-container" class="container pb-3 pt-3">
+            <div class="row">
+                <div class="col-12 col-md-3 pt-3 pb-3">
+                    <h1 id="salute" style="color: beige;">Good morning, </h1>
+                    <div class="form-group">
+                        <select class="form-control" id="user-select">
+                            <option value="2">Guilherme</option>
+                            <option value="3">Filipe</option>
+                        </select>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" onclick="switchFluid(this)" type="checkbox" role="switch"
+                            id="flexSwitchCheckChecked">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Fluid</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div id="monthly-category-div" class="months-total col-12 col-md-3">
+                    <div class="card h-100 shadow-lg p-3 bg-white rounded">
+                        <h2>This month</h2>
+                        <canvas id="monthly-canvas"></canvas>
+                    </div>
+                </div>
+                <div id="current-div" class="this-month col-12 col-md-9">
+                    <div class="card h-100 shadow-lg p-3 bg-white rounded">
+                        <h2>Current</h2>
+                        <div
+                            class="h-100 justify-content-center container-fluid card numbers-div pb-3 pt-3 p-md-5 align-items-center">
+                            <div class="container-fluid">
+                                <div class="row g-1 align-items-center" style="justify-content: space-between;">
+                                    <div class="col-md-9 col-12 align-items-center">
+                                        <div id="currentMoney" class="row">
+                                            <div class="col-12" style="display: flex;" id="numbers">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="arrow" class="card col-md-2 col-12 align-items-center">
+                                        <img class="fs-responsive fs-responsive"
+                                            src="./icons/light/angle-double-down.svg" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 pt-3">
+                <div id="yearly-average" class="yearly-average col-12 col-md-3">
+                    <div class="card h-100 shadow-lg p-3 bg-white rounded">
+                        <h2>Average - 2023</h2>
+                        <canvas id="yearly-average-canvas"></canvas>
+                    </div>
+                </div>
+                <div id="yearly-total" class="yearly-total col-12 col-md-3">
+                    <div onclick="toggleShadow(this)" class="yearly-chart h-100 card shadow-lg p-3 bg-white rounded">
+                        <h2>Yearly</h2>
+                        <canvas id="yearly-canvas"></canvas>
+                    </div>
+                </div>
+                <div id="monthly-overview" class="monthly-overview col-12 col-md-6">
+                    <div onclick="toggleShadow(this)" class="yearly-chart h-100 card shadow-lg p-3 bg-white rounded">
+                        <h2>Overview</h2>
+                        <canvas id="monthly-overview-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3 pt-3">
+                <div class="col-12 col-md-4">
+                    <form id="create-movement-div" class="card form-details pb-3 pt-3">
+                        <h2>Add movement</h2>
+                        <div class="form-group pl-3  pb-3 pr-3">
+                            <label for="exampleFormControlInput1">Description</label>
+                            <input type="text" name="desc-input" class="form-control">
+                        </div>
+                        <div class="form-group pl-3 pb-3 pr-3">
+                            <label for="exampleFormControlSelect1">Category</label>
+                            <select class="form-control" name="catId-input" id="category-dropdown">
+                            </select>
+                        </div>
+                        <div class="form-group pl-3 pb-3 pr-3">
+                            <label for="exampleFormControlInput1">Cost</label>
+                            <input type="number" class="form-control" name="cost-input">
+                        </div>
+                        <div class="form-group pl-3 pb-3 pr-3">
+                            <label for="exampleFormControlInput1">Date</label>
+                            <input type="date" name="date-input" class="form-control">
+                        </div>
+                        <div class="submit-buttons pt-2" style="display: flex; gap: 0.5rem;">
+                            <a href="#" id="create-movement-button" class="btn btn-primary btn-lg enabled w-100 p-2"
+                                tabindex="-1" role="button" aria-disabled="true">Add</a>
+                            <button type="reset" id="reset-movement-button" class="btn btn-secondary btn-lg w-80 p-2"
+                                tabindex="-1" role="button" aria-disabled="true">Clear</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <form id="create-category-div" class="card form-details pb-3 pt-3">
+                        <h2>Create Category</h2>
+                        <div class="form-group pl-3 pb-3 pr-3">
+                            <label for="name">New name</label>
+                            <input type="text" class="form-control" name="name">
+                        </div>
+                        <div class="form-group pl-3 pb-3 pr-3">
+                            <label for="icon-path">Icon name<a href="/icons.html"><img class="icon"
+                                        style="margin-left: .5rem;" heigh="16" width="16"
+                                        src="icons/light/question-circle.svg" /></a></label>
+                            <input type="text" class="form-control" name="iconpath">
+                        </div>
+                        <div class="submit-buttons pt-2" style="display: flex; gap: 0.5rem;">
+                            <a id="create-category-button" href="#" class="btn btn-primary btn-lg enabled w-100 p-2"
+                                tabindex="-1" role="button" aria-disabled="true">Create</a>
+                            <button type="reset" id="reset-category-button" class="btn btn-secondary btn-lg w-80 p-2"
+                                tabindex="-1" role="button" aria-disabled="true">Clear</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-12 col-md-4 no-data">
+                    <div class="card container">
+                        <div id="filtersList" class="row g-1 p-2">
+                        </div>
+                    </div>
+                    <ul id="yearly-expenses" class="list-group mt-2" style="max-height: 20rem; overflow-y: scroll;">
+                    </ul>
+                    <div class="submit-buttons pt-2">
+                        <button id="create-category-button" type="submit"
+                            class="btn btn-primary btn-lg enabled w-100 p-2" tabindex="-1" role="button"
+                            onclick="updateMovements(event)" aria-disabled="true">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="index.js"></script>
+    <!-- <script>
+        const salute = document.querySelector('#salute');
+        const currentTime = new Date().getHours();
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        salute.innerHTML = currentTime < 12 && currentTime > 6 ? "Good morning," : currentTime < 20 && currentTime > 12 ? "Good afternoon," : "Good evening,";
+
+        var url_string = (window.location.href).toLowerCase();
+        var url = new URL(url_string);
+        var name = url.searchParams.get("name");
+
+        const loggedInUser = document.querySelector('#exampleFormControlSelect1');
+
+        if (name == 'filipe') {
+            loggedInUser.value = 0;
+        } else if (name == 'guilherme') {
+            loggedInUser.value = 1;
+        }
+    </script> -->
+
+    <script>
+        // let apiHost = 'localhost';
+        // let apiPort = '3000';
+
+        // const container = document.querySelector('#outer-container');
+
+        // const yearlyExpensesList = document.querySelector('#yearly-expenses');
+        // const ctxY = document.getElementById('yearly-canvas');
+        // const ctxM = document.getElementById('monthly-canvas');
+        // const montlyCanvas = document.getElementById('monthly-overview-canvas');
+        // const ctxYA = document.getElementById('yearly-average-canvas');
+
+        // let yearlyExpenses = document.querySelector('.no-data')
+
+        // // forms
+        // let createCategoryDiv = document.querySelector('#create-category-div');
+        // let createMovementDiv = document.querySelector('#create-movement-div');
+
+
+        // // buttons
+        // let resetCategoryButton = document.querySelector('#reset-category-button');
+        // let createCategoryButton = document.querySelector('#create-category-button');
+        // let createMovementButton = document.querySelector('#create-movement-button');
+        // let resetMovementButton = document.querySelector('#reset-movement-button');
+
+        // let usersSelectForm = document.querySelector('#user-select');
+
+        // const filtersMonth = document.querySelector('#filtersList');
+
+        // let skippedRecords = 0;
+        // let limit = 100000;
+
+        // let monthsArr = [];
+        // let monthlySpendingsList = [];
+
+        // function switchFluid(el) {
+        //     let fluid = el.checked ? 'container-fluid' : 'container';
+        //     container.classList.remove('container');
+        //     container.classList.remove('container-fluid');
+        //     container.classList.add(fluid);
+        // }
+        
+
+    //     function switchToMonthList(month) {
+    //         yearlyExpensesList.innerHTML = '';
+    //         monthlySpendingsList.forEach(element => {
+    //             let date = new Date(element.date)
+    //             if (new Date(element.date).getMonth() == month)
+    //                 yearlyExpensesList.innerHTML +=
+    //                     `<li data-id="${element.id}" class="list-group-item d-flex justify-content-between align-items-start"
+    //                             style="border-top: 0 !important;border-top: 1px solid black;border-left: 0 !important;border-right: 0 !important;">
+    //                             <div class="ms-2 me-auto">
+    //                                 <div style="display: flex; justify-content: start; align-items: center; gap: .5rem;"
+    //                                     class="fw-bold">
+    //                                     <img src="./icons/${element.icon}" class="icon" height="32" width="32" />
+    //                                     <span class="desc-history" contenteditable="true">${element.description}</span>
+    //                                 </div>
+    //                                 <span class="date-history" contenteditable="true">${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}</span>
+    //                             </div>
+    //                             <div class="d-flex g-1" style="justify-content: center; align-items: center; gap: .5rem;">
+    //                                 <span class="badge value-history bg-primary rounded-pill" contenteditable="true">${element.value}€</span>
+    //                                 <img class="icon-red" onclick="deleteMovement(${element.id})" src="./icons/duotone/window-close.svg" height="16" width="16"/>
+    //                             </div>
+    //                         </li>`;
+    //         });
+    //     }
+
+    //     getHistory();
+
+    //     async function getHistory() {
+    //         await axios.get(`http://${apiHost}:${apiPort}/getHistoryByYear/${new Date().getFullYear()}/${limit}/${skippedRecords}`).then(response => {
+    //             if (response.data.length > 0) {
+    //                 skippedRecords += limit;
+
+    //                 monthlySpendingsList = response.data;
+
+    //                 response.data.forEach(element => {
+    //                     let date = new Date(element.date);
+    //                     if (!monthsArr.includes(months[date.getMonth()]))
+    //                         monthsArr.push(months[date.getMonth()]);
+    //                 });
+
+    //                 if (monthsArr.includes(new Date().getMonth())) {
+    //                     switchToMonthList(months.indexOf(monthsArr[0]));
+    //                 } else {
+    //                     switchToMonthList(months.indexOf(monthsArr[0]));
+    //                 }
+
+
+    //                 filtersMonth.innerHTML = '';
+    //                 monthsArr.forEach((element, index) => {
+    //                     filtersMonth.innerHTML += `
+    //                 <div class="card col-2 clickable" onclick="switchToMonthList(${months.indexOf(monthsArr[index])})" style="text-align: center;">${element}</div>
+    //                 `
+    //                 });
+    //             } else {
+    //                 yearlyExpenses.innerHTML = `
+    //                     <div id="no-data" class="card shadow-lg p-3 bg-white rounded">
+    //                         <h2>no data</h2>
+    //                     </div>
+    //                 `;
+    //             }
+
+    //         })
+    //     }
+
+    //     axios.get(`http://${apiHost}:${apiPort}/getAllYearlyMovementsByCategory/${new Date().getFullYear()}`).then(response => {
+    //         let total = [];
+    //         let categories = [];
+
+    //         if (response.data.length > 0) {
+    //             response.data.forEach(element => {
+    //                 categories.push(element.name)
+    //                 total.push(element.total)
+    //             });
+
+    //             const dataYMC = {
+    //                 datasets: [{
+    //                     data: total
+    //                 }],
+
+
+    //                 // These labels appear in the legend and in the tooltips when hovering different arcs
+    //                 labels: categories
+    //             };
+
+    //             new Chart(ctxY, {
+    //                 type: 'doughnut',
+    //                 data: dataYMC,
+    //                 options: {
+    //                     backgroundColor: [
+    //                         '#0B2447',
+    //                         '#19376D', '#576CBC', '#A5D7E8'
+
+    //                     ],
+    //                     borderColor: "rgba(255,255,255,0)"
+
+    //                 }
+    //             });
+    //         } else {
+    //             document.querySelector('#yearly-total').innerHTML = `
+    //             <div id="no-data" class="card shadow-lg p-3 bg-white rounded">
+    //                     <h2>no data</h2>
+    //                 </div>
+    //             `
+    //         }
+    //     });
+
+    //     axios.get(`http://${apiHost}:${apiPort}/getAllMonthlyMovementsByCategory/${new Date().getMonth() + 1}`).then(response => {
+
+    //         if (response.data.length > 0) {
+    //             let total = [];
+    //             let categories = [];
+    //             response.data.forEach(element => {
+    //                 categories.push(element.name)
+    //                 total.push(element.total)
+    //             });
+
+    //             const dataM = {
+    //                 datasets: [{
+    //                     data: total
+    //                 }],
+
+    //                 // These labels appear in the legend and in the tooltips when hovering different arcs
+    //                 labels: categories
+    //             };
+
+    //             new Chart(ctxM, {
+    //                 type: 'doughnut',
+    //                 data: dataM,
+    //                 options: {
+    //                     backgroundColor: [
+    //                         '#0B2447',
+    //                         '#19376D', '#576CBC', '#A5D7E8'
+
+    //                     ],
+    //                     borderColor: "rgba(255,255,255,0)"
+
+    //                 }
+    //             });
+    //         } else {
+    //             document.querySelector('#monthly-category-div').innerHTML = `
+    //                 <div id="no-data" class="card shadow-lg p-3 bg-white rounded">
+    //                     <h2>no data</h2>
+    //                 </div>
+    //             `;
+    //         }
+    //     });
+
+    //     axios.get(`http://${apiHost}:${apiPort}/getAllMonthlyMovementsByUser/${new Date().getFullYear()}`).then(response => {
+    //         let user1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    //         let user2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    //         console.log(response.data)
+
+    //         if (response.data.length > 0) {
+    //             response.data.forEach((element, index) => {
+    //                 if (element.name === 'Filipe') {
+    //                     user1[Math.round(element.month)] = element.total;
+
+    //                 } else if (element.name === 'Guilherme') {
+    //                     user2[Math.round(element.month)] = element.total;
+
+    //                 }
+    //             });
+
+    //             const labels = months;
+    //             const dataLine = {
+    //                 labels: labels,
+    //                 datasets: [
+    //                     {
+    //                         label: 'Filipe',
+    //                         data: user1,
+    //                         borderColor: 'rgb(25, 192, 255)',
+    //                         backgroundColor: 'rgb(25, 192, 255)',
+    //                         yAxisID: 'y',
+    //                     },
+    //                     {
+    //                         label: 'Guilherme',
+    //                         data: user2,
+    //                         borderColor: 'rgb(75, 192, 192)',
+    //                         backgroundColor: 'rgb(75, 192, 192)',
+    //                         yAxisID: 'y1',
+    //                     }
+    //                 ]
+    //             }
+
+    //             const config = {
+    //                 type: 'line',
+    //                 data: dataLine,
+    //             };
+
+    //             new Chart(montlyCanvas, {
+    //                 type: 'line',
+    //                 data: dataLine,
+    //                 options: {
+    //                     scales: {
+    //                         y: {
+    //                             ticks: {
+    //                                 display: false
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+
+    //             });
+    //         } else {
+    //             document.querySelector('#monthly-overview').innerHTML = `
+    //             <div id="no-data" class="card shadow-lg p-3 bg-white rounded">
+    //                     <h2>no data</h2>
+    //                 </div>
+    //             `
+    //         }
+    //     });
+
+    //     axios.get(`http://${apiHost}:${apiPort}/getAllMonthlyMovementsAverage/${new Date().getMonth() + 1}`).then(response => {
+    //         let values = [];
+
+    //         console.log(response.data)
+    //         let total = 0;
+    //         response.data.forEach((element, index) => {
+    //             if (index == 0) {
+    //                 values[0] = element.outof
+    //             }
+    //             total += Number(element.total);
+    //         });
+
+    //         values[1] = (total) / response.data.length;
+
+    //         if (values[0] != null) {
+    //             let valuesChart = [];
+    //             valuesChart[0] = values[0];
+    //             valuesChart[1] = values[0] - values[1] < 0 ? 0 : values[0] - values[1];
+    //             const dataM = {
+    //                 datasets: [{
+    //                     data: valuesChart
+    //                 }],
+
+    //                 // These labels appear in the legend and in the tooltips when hovering different arcs
+    //                 labels: [months[new Date().getMonth()], 'Average']
+    //             };
+
+
+    //             new Chart(ctxYA, {
+    //                 type: 'doughnut',
+    //                 data: dataM,
+    //                 options: {
+    //                     backgroundColor: [
+    //                         '#0B2447',
+    //                         '#19376D', '#576CBC', '#A5D7E8'
+
+    //                     ],
+    //                     borderColor: "rgba(255,255,255,0)"
+
+    //                 }
+    //             });
+    //         } else {
+    //             document.querySelector('#yearly-average').innerHTML = `
+    //                 <div id="no-data" class="card shadow-lg p-3 bg-white rounded">
+    //                     <h2>no data</h2>
+    //                 </div>                
+    //             `
+    //         }
+
+
+    //         let currentDiv = document.querySelector('#currentMoney');
+    //         let arrow = document.querySelector('#arrow');
+    //         let currentMoney = values[0];
+    //         let average = values[1];
+    //         let roundedMoney = (Math.round(currentMoney) * 10) / 10
+    //         let currentMoneyArr = Array.from(roundedMoney.toString());
+    //         let statusColour = '';
+
+    //         console.log(currentMoney)
+    //         average > currentMoney ? statusColour = arrow.classList.add('icon-green') :
+    //             average < currentMoney ? statusColour = arrow.classList.add('icon-red') : statusColour = arrow.classList.add('icon-yellow');
+
+    //         currentDiv.innerHTML = "";
+
+    //         let col = 12 / (currentMoneyArr.length + 1);
+
+    //         if (values[0] != null) {
+    //             currentMoneyArr.forEach(number => {
+    //                 let colNum = Math.round(col);
+    //                 if (number == '.') {
+    //                     colNum = '1';
+    //                 }
+
+    //                 currentDiv.innerHTML += `
+    //                 <div class="card p-2 col-${colNum} align-items-center">
+    //                     <h1 style="font-size: 6rem;">${number}</h1>
+    //                 </div>
+    //                 `;
+    //             });
+    //             currentDiv.innerHTML += `
+    //             <div class="card p-2 col-${Math.round(col)} align-items-center justify-content-center">
+    //                 <img src="./icons/light/euro-sign.svg" class="icon fs-responsive" alt="">
+    //             </div>`;
+    //         } else {
+    //             document.querySelector('#current-div').innerHTML = `
+    //                 <div id="no-data" class="card h-100 w-100 shadow-lg p-3 bg-white rounded">
+    //                     <h2>no data</h2>
+    //                 </div>
+    //             `
+    //         }
+    //     });
+
+    //     getCategoriesComboBox();
+
+    //     function getCategoriesComboBox() {
+    //         axios.get(`http://${apiHost}:${apiPort}/all/categories`).then(response => {
+    //             let categoriesDropDown = document.querySelector('#category-dropdown');
+
+    //             categoriesDropDown.innerHTML = '';
+
+    //             response.data.forEach(category => {
+    //                 categoriesDropDown.innerHTML += `
+    //                 <option value="${category.id}">${category.name}</option>
+    //                 `;
+    //             });
+    //         });
+    //     }
+
+    //     createCategoryButton.addEventListener('click', (e) => {
+    //         e.preventDefault();
+
+    //         let formData = new FormData(createCategoryDiv);
+
+    //         createCategory(formData);
+    //     })
+
+    //     function createCategory(formData) {
+    //         axios.post(`http://${apiHost}:${apiPort}/create/category`, {
+    //             name: document.forms["create-category-div"]["name"].value,
+    //             iconpath: document.forms["create-category-div"]["iconpath"].value
+    //         })
+    //             .then(function (response) {
+    //                 getCategoriesComboBox()
+    //             })
+    //             .catch(function (error) {
+    //                 console.log(error);
+    //             });
+    //     }
+
+    //     createMovementButton.addEventListener('click', async (e) => {
+    //         e.preventDefault();
+
+    //         let formData = new FormData(createMovementDiv);
+
+    //         await createMovement(formData);
+    //     })
+
+    //     async function createMovement(formData) {
+    //         await axios.post(`http://${apiHost}:${apiPort}/create/movement`, {
+    //             description: document.forms["create-movement-div"]["desc-input"].value,
+    //             categoryId: document.querySelector('#category-dropdown').value,
+    //             value: document.forms["create-movement-div"]["cost-input"].value,
+    //             date: document.forms["create-movement-div"]["date-input"].value,
+    //             user: document.querySelector('#user-select').value
+    //         })
+    //             .then(async function (response) {
+
+    //             })
+    //             .catch(function (error) {
+    //                 console.log(error);
+    //             });
+
+    //         await getHistory();
+    //         switchToMonthList(new Date(document.forms["create-movement-div"]["date-input"].value).getMonth())
+    //     }
+
+    //     async function updateMovements(e) {
+    //         e.preventDefault();
+
+    //         let updatables = [];
+
+    //         for (let pos = 0; pos < document.querySelector('#yearly-expenses').childNodes.length; pos++) {
+    //             let id = document.querySelector('#yearly-expenses').childNodes[pos].dataset.id;
+    //             let desc = document.querySelector('#yearly-expenses').childNodes[pos].querySelector('.desc-history').innerHTML;
+    //             let date = document.querySelector('#yearly-expenses').childNodes[pos].querySelector('.date-history').innerHTML;
+    //             let value = document.querySelector('#yearly-expenses').childNodes[pos].querySelector('.value-history').innerHTML.replace('€', '');
+
+    //             updatables.push({
+    //                 id: id,
+    //                 desc: desc,
+    //                 date: date,
+    //                 value: value
+    //             })
+    //         }
+
+    //         axios.put(`http://${apiHost}:${apiPort}/update/movements`, updatables)
+    //             .then(async function (response) {
+    //                 getHistory();
+    //                 switchToMonthList(new Date(document.forms["create-movement-div"]["date-input"].value).getMonth() + 1)
+    //             })
+    //             .catch(function (error) {
+    //                 console.log(error);
+    //             });
+    //     }
+
+    //     function deleteMovement(id) {
+    //         axios.get(`http://${apiHost}:${apiPort}/delete/movement/${id}`)
+    //             .then(async function (response) {
+
+    //             })
+    //             .catch(function (error) {
+    //                 console.log(error);
+
+    //             });
+
+    //         monthlySpendingsList.sort(function (a, b) {
+    //             return new Date(b.date) - new Date(a.date);
+    //         });
+
+    //         getHistory();
+    //         switchToMonthList(new Date(monthlySpendingsList[0].date).getMonth() + 1)
+    //     }
+    // </script>
+
+    // <script>
+    //     function toggleShadow(el) {
+    //     }
+    // </script>
+</body>
+
+</html>
